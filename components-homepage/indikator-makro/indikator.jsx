@@ -1,5 +1,5 @@
 import Kartu from "./kartu";
-import { getIndikatorData } from "../../lib/indikator";
+import { getIndikatorData } from "../../lib/api";
 
 function hitungStatus(a, b) {
   return parseFloat(b) > parseFloat(a) ? "naik" : "turun";
