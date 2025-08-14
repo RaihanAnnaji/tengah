@@ -15,9 +15,10 @@ export default function ExportButtons({ datas, years }) {
   };
 
   const handleExportExcel = () => {
-    const rows = Object.entries(datas).map(([kode, { metadata, data }]) => {
+    let counter = 1; // untuk nomor urut
+    const rows = Object.values(datas).map(({ metadata, data }) => {
       const row = {
-        Kode: kode,
+        No: counter++, // nomor urut
         "Nama Elemen": metadata.nama_elemen,
         Satuan: metadata.satuan,
       };
@@ -26,12 +27,20 @@ export default function ExportButtons({ datas, years }) {
       });
       return row;
     });
-
-    const ws = XLSX.utils.json_to_sheet(rows);
+  
+    // atur urutan kolom: No → Nama Elemen → Satuan → Tahun
+    const headerOrder = [
+      "No",
+      "Nama Elemen",
+      "Satuan",
+      ...years
+    ];
+    const ws = XLSX.utils.json_to_sheet(rows, { header: headerOrder });
+    
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Data");
     XLSX.writeFile(wb, "data.xlsx");
-  };
+  };  
 
   return (
     <div className="flex gap-2">
