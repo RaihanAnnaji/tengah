@@ -11,6 +11,16 @@ export default function SearchBar({ initialQuery = "" }) {
 
   useEffect(() => setValue(initialQuery), [initialQuery]);
 
+  // Auto reset ketika input kosong
+  useEffect(() => {
+    if (value === "") {
+      const n = new URLSearchParams(params);
+      n.delete("q");
+      n.set("page", "1");
+      router.push(`${pathname}?${n.toString()}`);
+    }
+  }, [value, params, pathname, router]);
+
   const submit = (e) => {
     e?.preventDefault?.();
     const n = new URLSearchParams(params);
