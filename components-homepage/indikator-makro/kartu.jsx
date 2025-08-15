@@ -1,16 +1,17 @@
 import React from 'react'
 import { HiTrendingDown, HiTrendingUp } from 'react-icons/hi'
+import { TbFileSad } from 'react-icons/tb'
 
-const Kartu = ({ status, tahunA, persenA, tahunB, persenB, caption, className = "" }) => {
-  const isTurun = status === 'turun'
-  const Icon = isTurun ? HiTrendingDown : HiTrendingUp
-  const label = isTurun ? 'Turun' : 'Naik'
+const Kartu = ({ tahunA, persenA, tahunB, persenB, caption }) => {
+  const isNA = persenA === "N/A" || persenB === "N/A"
+  const valueA = isNA ? null : parseFloat(persenA)
+  const valueB = isNA ? null : parseFloat(persenB)
+  const isTurun = !isNA && valueB < valueA
+  const Icon = isNA ? TbFileSad : (isTurun ? HiTrendingDown : HiTrendingUp)
+  const label = isNA ? "-" : (isTurun ? "Turun" : "Naik")
 
   return (
-    <div
-      className={`group bg-gradient-to-b from-[#01BBA6] to-[#028b86] text-white rounded-2xl shadow-sm ring ring-gray-900/5 px-6 py-6 w-full mx-auto text-center transition-all ease-in-out duration-300 hover:-translate-y-1 hover:shadow-lg hover:ring-2 flex flex-col justify-between ${className}`}
-    >
-      {/* Judul */}
+    <div className="group bg-gradient-to-b from-[#01BBA6] to-[#028b86] text-white rounded-2xl shadow-sm ring ring-gray-900/5 px-6 py-6 w-full mx-auto text-center transition-all ease-in-out duration-300 hover:-translate-y-1 hover:shadow-lg hover:ring-2">
       <h3 className="text-lg">{caption}</h3>
 
       {/* icon */}
@@ -20,14 +21,10 @@ const Kartu = ({ status, tahunA, persenA, tahunB, persenB, caption, className = 
       </div>
 
       {/* keterangan */}
-      <div className="text-sm space-y-2 text-center">
-        <h4 className="text-lg">
-          {tahunB} : <span className="font-semibold text-white">{persenB}</span>
-        </h4>
+      <div className="text-sm mb-6 space-y-2 text-center">
+        <h4 className="text-lg">{tahunB} : <span className="font-semibold text-white">{persenB}</span></h4>
         <hr className="border-white/30 mx-auto w-1/2" />
-        <h4>
-          {tahunA} : <span className="font-semibold text-white">{persenA}</span>
-        </h4>
+        <h4>{tahunA} : <span className="font-semibold text-white">{persenA}</span></h4>
       </div>
     </div>
   )
