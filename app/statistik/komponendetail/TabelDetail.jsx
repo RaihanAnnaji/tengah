@@ -1,4 +1,7 @@
 "use client";
+import { useState } from "react";
+import { FaChartLine } from "react-icons/fa";
+import ChartModal from "./ChartModal"; // modal khusus grafik
 
 function getStatusColor(status) {
   switch (status) {
@@ -12,6 +15,15 @@ function getStatusColor(status) {
 
 export default function TabelDetail({ datas, years }) {
   const rows = Object.entries(datas);
+  const [selectedChartData, setSelectedChartData] = useState(null);
+
+  const handleOpenChart = (row) => {
+    setSelectedChartData(row); // simpan metadata + data untuk modal
+  };
+
+  const handleCloseChart = () => {
+    setSelectedChartData(null);
+  };
 
   return (
     <div className="overflow-x-auto">
@@ -24,12 +36,12 @@ export default function TabelDetail({ datas, years }) {
             {years.map((y) => (
               <th key={y} className="border px-2 py-1">{y}</th>
             ))}
+            <th className="border px-2 py-1 text-center">Grafik</th>
           </tr>
         </thead>
         <tbody>
           {rows.map(([_, { metadata, data }], index) => (
             <tr key={index} className="text-sm">
-              {/* Ganti kode asli dengan nomor urut */}
               <td className="border px-2 py-1 text-center">{index + 1}</td>
               <td className="border px-2 py-1">{metadata.nama_elemen}</td>
               <td className="border px-2 py-1">{metadata.satuan || "-"}</td>
@@ -44,10 +56,25 @@ export default function TabelDetail({ datas, years }) {
                   </td>
                 );
               })}
+              <td className="border px-2 py-1 text-center">
+                <button
+                  onClick={() => handleOpenChart({ metadata, data })}
+                  className="text-blue-500 hover:text-blue-700"
+                >
+                  <FaChartLine />
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {selectedChartData && (
+        <ChartModal
+          chartData={selectedChartData}
+          onClose={handleCloseChart}
+        />
+      )}
     </div>
   );
 }

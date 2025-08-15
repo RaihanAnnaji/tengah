@@ -1,8 +1,20 @@
 import Link from "next/link";
 
-export default function DatasetCard({ item }) {
+export default function DatasetCard({ item, currentPage, opd, urusan, q, sort }) {
+  // Buat query string dari pagination & filter
+  const params = new URLSearchParams({
+    ...(currentPage && { page: currentPage }),
+    ...(opd && { opd }),
+    ...(urusan && { urusan }),
+    ...(q && { q }),
+    ...(sort && { sort }),
+  }).toString();
+
   return (
-    <Link href={`/statistik/${item.id}`} className="block hover:shadow-md transition">
+    <Link
+      href={`/statistik/${item.id}${params ? `?${params}` : ""}`}
+      className="block hover:shadow-md transition"
+    >
       <article className="bg-white/90 border rounded-2xl p-4 shadow-sm">
         <h3 className="font-semibold text-lg mb-1">
           {item?.nama_elemen || "-"}

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getElemenDetail } from "../../../lib/api";
 import TabelDetail from "../komponendetail/TabelDetail";
 import FilterTahun from "../komponendetail/FilterTahun";
@@ -19,15 +20,24 @@ export default async function DetailPage({ params, searchParams }) {
     (_, i) => (dari + i).toString()
   );
 
+  // Buat query string untuk tombol kembali
+  const backParams = new URLSearchParams({
+    ...(s.page && { page: s.page }),
+    ...(s.opd && { opd: s.opd }),
+    ...(s.urusan && { urusan: s.urusan }),
+    ...(s.q && { q: s.q }),
+    ...(s.sort && { sort: s.sort }),
+  }).toString();
+
   return (
     <div className="min-h-screen pt-20 px-4 md:px-20 bg-gray-50 flex justify-center">
       <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-7xl">
-        <a
-          href="/statistik"
+        <Link
+          href={`/statistik${backParams ? `?${backParams}` : ""}`}
           className="text-blue-500 hover:underline mb-4 flex items-center"
         >
           ← Kembali
-        </a>
+        </Link>
 
         <h1 className="text-2xl font-bold">{data.elemen.label}</h1>
         <p className="text-sm text-gray-600 mb-4">

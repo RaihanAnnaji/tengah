@@ -17,7 +17,6 @@ export default async function StatistikPage({ searchParams }) {
   const q = (params?.q || "").toLowerCase();
   const sort = params?.sort || "az";
 
-
   // Ambil list data (SSR + ISR)
   const dataResp = await getList({
     page: 1, // ambil semua data untuk pagination manual
@@ -100,7 +99,15 @@ export default async function StatistikPage({ searchParams }) {
 
             <div className="space-y-3">
               {paginatedData.map((item) => (
-                <DatasetCard key={item.id} item={item} />
+                <DatasetCard
+                  key={item.id}
+                  item={item}
+                  currentPage={page}
+                  opd={opd}
+                  urusan={urusan}
+                  q={q}
+                  sort={sort}
+                />
               ))}
               {paginatedData.length === 0 && (
                 <div className="p-6 bg-white/80 border rounded-2xl text-gray-500">
