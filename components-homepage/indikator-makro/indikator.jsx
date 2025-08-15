@@ -1,32 +1,43 @@
-import Kartu from "./kartu";
-import { getIndikatorData } from "../../lib/api";
+// indikator.jsx (Server Component)
+import React from 'react'
+import Kartu from './kartu'
+import SliderMobile from './SliderMobile'
+import { getIndikatorData } from '../../lib/api'
+import dataDummy from './data' // fallback
 
-export default async function Indikator() {
-  const dataIndikator = await getIndikatorData({ revalidate: 300 });
+export default async function DataStatistik() {
+  let dataIndikator = []
+
+  try {
+    dataIndikator = await getIndikatorData({ revalidate: 300 })
+  } catch (err) {
+    console.error('Gagal fetch API indikator, pakai data dummy:', err)
+    dataIndikator = dataDummy
+  }
+
+  if (!dataIndikator.length) {
+    return <p className="text-center py-10">Tidak ada data tersedia</p>
+  }
 
   return (
     <div className="bg-[#EDFCED]">
-      <section className="px-4 py-20 max-w-7xl mx-auto">
-        {/* Judul */}
-        <div className="text-center mb-10">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#01BBA6]">
-            Indikator Makro
-          </h2>
-          <p className="text-slate-800 mt-1">Capaian Kabupaten Kulon Progo</p>
-        </div>
+      <section className="px-6 py-20 max-w-7xl mx-auto text-center">
+        {/* Judul & Subjudul */}
+        <h2 className="text-2xl md:text-3xl font-bold text-[#01BBA6]">
+          Indikator Makro
+        </h2>
+        <p className="text-slate-800 mt-1">Capaian Kabupaten Kulon Progo</p>
 
-        {/* List kartu */}
-        <div className="grid grid-flow-col md:grid-cols-4 gap-4 overflow-x-auto md:overflow-visible snap-x snap-mandatory px-4 md:px-0 items-stretch">
-          {dataIndikator.map((d) => (
-            <div
-              key={d.id}
-              className="snap-center shrink-0 w-full min-w-[280px] max-w-sm md:max-w-none mx-auto flex"
-            >
-              <Kartu {...d} className="h-full w-full" />
-            </div>
+        {/* Grid desktop */}
+        <div className="hidden md:grid md:grid-cols-4 gap-6 mt-10">
+          {dataIndikator.map((item, i) => (
+            <Kartu key={i} {...item} />
           ))}
         </div>
+
+        {/* Slider mobile (Client Component) */}
+        <SliderMobile dataIndikator={dataIndikator} />
       </section>
     </div>
-  );
+  )
 }
